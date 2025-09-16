@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jyotish Kumar Jha | Personal Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        :root {
+            --bg-primary: #F0F2F5; /* Light grey background */
+            --bg-secondary: #FFFFFF;
+            --text-primary: #1a202c; /* Darker grey for text */
+            --text-secondary: #4a5568; /* Medium grey */
+            --brand-primary: #8338ec; /* Vibrant Purple */
+            --brand-secondary: #3a86ff; /* Vibrant Blue */
+            --font-heading: 'Sora', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20%;
+            left: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(131, 56, 236, 0.1), transparent 70%);
+            filter: blur(100px);
+            z-index: -1;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -20%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(58, 134, 255, 0.1), transparent 70%);
+            filter: blur(100px);
+            z-index: -1;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+        }
+
+        /* Glassmorphism for Header */
+        #header {
+            background-color: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        
+        /* Claymorphism Cards & Buttons */
+        .clay-card {
+            background: #F0F2F5;
+            border-radius: 20px;
+            box-shadow: 
+                -8px -8px 16px rgba(255, 255, 255, 0.8), 
+                8px 8px 16px rgba(0, 0, 0, 0.1),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.7),
+                inset 2px 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .clay-card:hover {
+            box-shadow: 
+                -2px -2px 8px rgba(255, 255, 255, 0.8), 
+                2px 2px 8px rgba(0, 0, 0, 0.1),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.7),
+                inset 2px 2px 4px rgba(0, 0, 0, 0.05);
+            transform: translateY(2px);
+        }
+        .clay-button {
+            background: #F0F2F5;
+            border-radius: 12px;
+            box-shadow: 
+                -5px -5px 10px rgba(255, 255, 255, 0.8), 
+                5px 5px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease-in-out;
+        }
+        .clay-button:hover {
+             box-shadow: 
+                -2px -2px 5px rgba(255, 255, 255, 0.8), 
+                2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .clay-button:active {
+            box-shadow: 
+                inset -2px -2px 5px rgba(255, 255, 255, 0.8), 
+                inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+
+        /* Content Section Animation */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        .content-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Slideshow */
+        .slideshow-container {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .slideshow {
+            display: flex;
+            width: 300%;
+            height: 100%;
+            transition: transform 1s ease-in-out;
+        }
+        .slide {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* Navigation */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+            color: var(--text-secondary);
+        }
+        .nav-link:hover {
+             color: var(--brand-primary);
+        }
+        .nav-link.active {
+            color: var(--brand-primary);
+        }
+
+        .submenu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 200px;
+            padding-top: 1rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .has-submenu:hover .submenu, .has-submenu:focus-within .submenu {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animated Items Staggered */
+        .animated-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .content-section.active .animated-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .content-section.active .animated-item:nth-child(1) { transition-delay: 0.1s; }
+        .content-section.active .animated-item:nth-child(2) { transition-delay: 0.2s; }
+        .content-section.active .animated-item:nth-child(3) { transition-delay: 0.3s; }
+        .content-section.active .animated-item:nth-child(4) { transition-delay: 0.4s; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="sticky top-0 z-50 transition-all duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-3xl font-bold" data-section="home" style="background: linear-gradient(45deg, var(--brand-primary), var(--brand-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">JKJ.</a>
+            
+            <div class="hidden md:flex items-center space-x-10">
+                <a href="#home" class="nav-link font-medium active" data-section="home">Home</a>
+                <div class="relative has-submenu">
+                    <button class="nav-link font-medium focus:outline-none flex items-center gap-1" data-section="about">About <i data-feather="chevron-down" class="h-4 w-4"></i></button>
+                    <div class="submenu bg-white/70 backdrop-blur-lg rounded-xl shadow-2xl py-2 border border-slate-100/80">
+                        <a href="#about-introduction" class="block px-5 py-2 text-sm text-slate-600 hover:bg-slate-100/70 hover:text-brand-primary" data-section="about" data-subsection="introduction">Introduction</a>
+                        <a href="#about-skills" class="block px-5 py-2 text-sm text-slate-600 hover:bg-slate-100/70 hover:text-brand-primary" data-section="about" data-subsection="skills">Skills</a>
+                        <a href="#about-education" class="block px-5 py-2 text-sm text-slate-600 hover:bg-slate-100/70 hover:text-brand-primary" data-section="about" data-subsection="education">Education</a>
+                    </div>
+                </div>
+                 <a href="#projects" class="nav-link font-medium" data-section="projects">Projects</a>
+                <div class="relative has-submenu">
+                    <button class="nav-link font-medium focus:outline-none flex items-center gap-1" data-section="experiences">Experiences <i data-feather="chevron-down" class="h-4 w-4"></i></button>
+                    <div class="submenu bg-white/70 backdrop-blur-lg rounded-xl shadow-2xl py-2 border border-slate-100/80">
+                        <a href="#experiences-professional" class="block px-5 py-2 text-sm text-slate-600 hover:bg-slate-100/70 hover:text-brand-primary" data-section="experiences" data-subsection="professional">Professional</a>
+                        <a href="#experiences-leadership" class="block px-5 py-2 text-sm text-slate-600 hover:bg-slate-100/70 hover:text-brand-primary" data-section="experiences" data-subsection="leadership">Leadership</a>
+                        <a href="#experiences-research" class="block px-5 py-2 text-sm text-slate-600 hover:bg-slate-100/70 hover:text-brand-primary" data-section="experiences" data-subsection="research">Research</a>
+                    </div>
+                </div>
+                <div class="relative has-submenu">
+                    <button class="nav-link font-medium focus:outline-none flex items-center gap-1" data-section="recognition">Recognition <i data-feather="chevron-down" class="h-4 w-4"></i></button>
+                    <div class="submenu bg-white/70 backdrop-blur-lg rounded-xl shadow-2xl py-2 border border-slate-100/80">
+                        <a href="#recognition-awards" class="block px-5 py-2 text-sm text-slate-600 hover:bg-slate-100/70 hover:text-brand-primary" data-section="recognition" data-subsection="awards">Awards</a>
+                        <a href="#recognition-certifications" class="block px-5 py-2 text-sm text-slate-600 hover:bg-slate-100/70 hover:text-brand-primary" data-section="recognition" data-subsection="certifications">Certifications</a>
+                    </div>
+                </div>
+                <a href="#blogs" class="nav-link font-medium" data-section="blogs">Blogs</a>
+                <a href="#contact" class="nav-link font-medium" data-section="contact">Contact</a>
+            </div>
+
+            <button id="mobile-menu-button" class="md:hidden">
+                <i data-feather="menu" class="h-6 w-6 text-slate-600"></i>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2"></div>
+    </header>
+
+    <main>
+        
+        <!-- Home Section -->
+        <section id="home" class="content-section active">
+            <div class="slideshow-container">
+                <div class="slideshow">
+                    <div class="slide" style="background-image: url('https://placehold.co/1920x1080/c4b5fd/1e1b4b?text=Automation');"></div>
+                    <div class="slide" style="background-image: url('https://placehold.co/1920x1080/a5b4fc/1e1b4b?text=Robotics');"></div>
+                    <div class="slide" style="background-image: url('https://placehold.co/1920x1080/818cf8/1e1b4b?text=Autonomous+Vehicles');"></div>
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-center justify-center">
+                    <div class="text-center text-white p-8">
+                        <h1 class="text-5xl md:text-7xl font-bold mb-4 tracking-tight">I'm Jyotish Kumar Jha</h1>
+                        <p class="text-xl md:text-2xl font-light text-slate-200">A Mechanical Engineer & Automation Enthusiast</p>
+                    </div>
+                </div>
+            </div>
+             <div class="bg-secondary px-6 py-20 md:py-32">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-4xl font-bold text-slate-800 mb-6">Welcome to My World</h2>
+                    <p class="text-xl text-slate-600 leading-relaxed">
+                        I see a future where robots help us overcome some of our biggest challenges. As a mechanically minded engineer with hands-on experience in automation, I am seeking a graduate research opportunity in path planning, state estimation, and localization of autonomous vehicles.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wrapper for all other sections -->
+        <div class="container mx-auto px-6 py-20">
+            <!-- About Section -->
+            <section id="about" class="content-section">
+                <div id="about-introduction" class="subsection">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="relative clay-card p-4 rounded-full">
+                            <img src="https://placehold.co/300x300/e2e8f0/475569?text=JKJ" alt="Jyotish Kumar Jha" class="rounded-full shadow-2xl w-64 h-64 md:w-72 md:h-72 object-cover">
+                            <div class="absolute bottom-4 right-4 bg-gradient-to-tr from-brand-primary to-brand-secondary p-3 rounded-full shadow-lg">
+                                <i data-feather="code" class="text-white h-8 w-8"></i>
+                            </div>
+                        </div>
+                        <blockquote class="text-2xl italic text-slate-600 my-10 max-w-2xl">
+                            "The best way to predict the future is to create it."
+                        </blockquote>
+                    </div>
+                    <div class="max-w-4xl mx-auto text-center space-y-5 text-lg leading-relaxed">
+                         <h2 class="text-4xl font-bold mb-4">About Me</h2>
+                        <p>Hello! I'm a Mechanical Engineer from Kathmandu, Nepal with a deep passion for robotics and automation. Driven by the potential of autonomous systems to solve critical global issues, my goal is to contribute to this field through dedicated research and innovation.</p>
+                    </div>
+                </div>
+                <div id="about-skills" class="subsection hidden mt-20">
+                    <h3 class="text-3xl font-bold mb-12 text-center">My Skillset</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                        <div class="p-8 clay-card">
+                            <i data-feather="code" class="mx-auto h-12 w-12 text-brand-primary mb-4"></i>
+                            <h4 class="font-semibold text-xl">Programming</h4>
+                            <p class="text-sm text-slate-500 mt-2">Python (NumPy, Pandas), MATLAB (Computer Vision, Autonomous Driving)</p>
+                        </div>
+                        <div class="p-8 clay-card">
+                            <i data-feather="tool" class="mx-auto h-12 w-12 text-brand-primary mb-4"></i>
+                            <h4 class="font-semibold text-xl">Software</h4>
+                            <p class="text-sm text-slate-500 mt-2">SolidWorks, Excel, Origin Pro, MS Office Suite</p>
+                        </div>
+                        <div class="p-8 clay-card">
+                            <i data-feather="book-open" class="mx-auto h-12 w-12 text-brand-primary mb-4"></i>
+                            <h4 class="font-semibold text-xl">Project & Research</h4>
+                            <p class="text-sm text-slate-500 mt-2">Asana, Notebook LM, Report Writing, Documentation</p>
+                        </div>
+                         <div class="p-8 clay-card">
+                            <i data-feather="globe" class="mx-auto h-12 w-12 text-brand-primary mb-4"></i>
+                            <h4 class="font-semibold text-xl">Languages</h4>
+                            <p class="text-sm text-slate-500 mt-2">Nepali (Native), English (C1 Proficiency)</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="about-education" class="subsection hidden mt-20">
+                     <h3 class="text-3xl font-bold mb-12 text-center">Education</h3>
+                     <div class="max-w-md mx-auto border-l-4 border-brand-secondary/30 pl-10">
+                         <div class="relative mb-8">
+                             <div class="absolute -left-[50px] top-1 h-6 w-6 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-full flex items-center justify-center shadow-lg">
+                                 <i data-feather="award" class="h-4 w-4 text-white"></i>
+                             </div>
+                             <h4 class="font-bold text-xl">Bachelor of Mechanical Engineering</h4>
+                             <p class="text-slate-600">Kathmandu University, School of Engineering | May 2024</p>
+                             <p class="text-sm mt-1 font-medium text-brand-primary">Cumulative GPA: 3.15/4.00</p>
+                         </div>
+                     </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="content-section">
+                <h2 class="text-4xl font-bold mb-4 text-center">My Projects</h2>
+                <p class="mb-16 text-xl leading-relaxed text-center max-w-3xl mx-auto text-slate-600">A selection of projects that showcase my skills in robotics, automation, and mechanical design.</p>
+                <div class="space-y-12">
+                    <div class="animated-item bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-slate-100/80 flex flex-col md:flex-row items-center gap-10">
+                        <img src="https://placehold.co/400x250/ede9fe/312e81?text=Path+Planning" class="w-full md:w-1/3 rounded-lg object-cover">
+                        <div class="md:w-2/3">
+                            <h3 class="text-2xl font-bold mb-2">Latitude and Longitudinal Path Planning in Autonomous Vehicle</h3>
+                            <p class="text-sm text-slate-500 mb-3 font-medium">July 2023 - May 2024</p>
+                            <p class="text-slate-600 leading-relaxed">Designed and implemented control algorithms for precise lateral and longitudinal path planning in autonomous vehicles using MATLAB, and Python.</p>
+                        </div>
+                    </div>
+                    <div class="animated-item bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-slate-100/80 flex flex-col md:flex-row items-center gap-10">
+                        <img src="https://placehold.co/400x250/ede9fe/312e81?text=EV+Retrofitting" class="w-full md:w-1/3 rounded-lg object-cover">
+                        <div class="md:w-2/3">
+                            <h3 class="text-2xl font-bold mb-2">Prospects of Retrofitting ICE Vehicles to EVs in Nepal</h3>
+                            <p class="text-sm text-slate-500 mb-3 font-medium">Jan 2024 - May 2024</p>
+                            <p class="text-slate-600 leading-relaxed">Conducted a comparative study of 12 international case studies and developed actionable policy recommendations for Nepal.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Experiences Section -->
+            <section id="experiences" class="content-section">
+                <p class="mb-16 text-xl leading-relaxed text-center max-w-3xl mx-auto text-slate-600">My professional journey has provided me with invaluable hands-on experience in engineering, research, and leadership.</p>
+                 <div id="experiences-professional" class="subsection">
+                    <h3 class="text-3xl font-bold mb-12 text-center">Professional Experience</h3>
+                     <div class="grid md:grid-cols-2 gap-10">
+                         <div class="animated-item clay-card p-2">
+                             <div class="bg-white rounded-[14px] overflow-hidden h-full">
+                                 <img src="https://placehold.co/500x350/ede9fe/312e81?text=STEAM+Lab" alt="STEAM Officer" class="w-full h-64 object-cover">
+                                 <div class="p-8">
+                                     <h4 class="font-bold text-2xl">STEAM Officer</h4>
+                                     <p class="text-brand-secondary font-medium text-sm mb-4">Kopila Valley Sewa Samaj | May 2024 - Present</p>
+                                     <ul class="list-disc list-inside text-slate-600 space-y-2">
+                                         <li>Designed and set up a Makerspace lab for robotics and electronics.</li>
+                                         <li>Developed STEM curriculum (Arduino, mechatronics).</li>
+                                     </ul>
+                                 </div>
+                               </div>
+                         </div>
+                         <div class="animated-item clay-card p-2">
+                             <div class="bg-white rounded-[14px] overflow-hidden h-full">
+                                <img src="https://placehold.co/500x350/dbeafe/1e3a8a?text=Engineering" alt="Mechanical Engineer" class="w-full h-64 object-cover">
+                                <div class="p-8">
+                                    <h4 class="font-bold text-2xl">Mechanical Engineer</h4>
+                                    <p class="text-brand-secondary font-medium text-sm mb-4">Multiscope and Green Innovative solution | Dec 2023 - April 2024</p>
+                                    <ul class="list-disc list-inside text-slate-600 space-y-2">
+                                        <li>Conducted energy audits and drafted reports and policy guidelines.</li>
+                                        <li>Assisted in designing machinery using SolidWorks.</li>
+                                    </ul>
+                                </div>
+                           </div>
+                         </div>
+                     </div>
+                </div>
+                 <div id="experiences-leadership" class="subsection hidden mt-20">
+                    <h3 class="text-3xl font-bold mb-12 text-center">Leadership & Volunteer</h3>
+                     <div class="grid md:grid-cols-2 gap-10">
+                        <div class="animated-item clay-card p-2">
+                           <div class="bg-white rounded-[14px] overflow-hidden h-full">
+                                <img src="https://placehold.co/500x350/dbeafe/1e3a8a?text=KU+Robotics" alt="Robotics Club" class="w-full h-64 object-cover">
+                                <div class="p-8">
+                                    <h4 class="font-bold text-2xl">President, KU Robotics Club</h4>
+                                    <p class="text-brand-secondary font-medium text-sm mb-4">2023 - 2024</p>
+                                    <ul class="list-disc list-inside text-slate-600 space-y-2">
+                                        <li>Led Aavishkar '24 with over 3500 attendees.</li>
+                                        <li>Increased revenue by 3x through partnerships.</li>
+                                    </ul>
+                                </div>
+                           </div>
+                        </div>
+                        <div class="animated-item clay-card p-2">
+                           <div class="bg-white rounded-[14px] overflow-hidden h-full">
+                                <img src="https://placehold.co/500x350/dbeafe/1e3a8a?text=Volunteering" alt="Amnesty International" class="w-full h-64 object-cover">
+                                <div class="p-8">
+                                    <h4 class="font-bold text-2xl">Member, Amnesty Intl. KU Youth Network</h4>
+                                    <p class="text-brand-secondary font-medium text-sm mb-4">Sept 2019 - Apr 2023</p>
+                                    <ul class="list-disc list-inside text-slate-600 space-y-2">
+                                        <li>Co-organized "Idea, Innovation, and Industry" seminar.</li>
+                                        <li>Instructed 110+ students on climate change.</li>
+                                    </ul>
+                                </div>
+                           </div>
+                        </div>
+                     </div>
+                </div>
+                <div id="experiences-research" class="subsection hidden mt-20">
+                    <h3 class="text-3xl font-bold mb-12 text-center">Research</h3>
+                     <div class="max-w-2xl mx-auto">
+                        <div class="animated-item clay-card p-2">
+                           <div class="bg-white rounded-[14px] overflow-hidden h-full">
+                                <img src="https://placehold.co/500x350/dbeafe/1e3a8a?text=Research" alt="Research Assistant" class="w-full h-64 object-cover">
+                                <div class="p-8">
+                                    <h4 class="font-bold text-2xl">Research Assistant</h4>
+                                    <p class="text-brand-secondary font-medium text-sm mb-4">Kathmandu University | Jan 2023 - Jun 2023</p>
+                                    <ul class="list-disc list-inside text-slate-600 space-y-2">
+                                        <li>Contributed to a research project on SLAM (Simultaneous Localization and Mapping) for autonomous ground vehicles.</li>
+                                        <li>My work involved data collection from LiDAR sensors and implementing particle filters in Python for state estimation.</li>
+                                    </ul>
+                                </div>
+                           </div>
+                        </div>
+                     </div>
+                </div>
+            </section>
+            
+            <!-- Recognition Section -->
+            <section id="recognition" class="content-section">
+                <p class="mb-16 text-xl leading-relaxed text-center max-w-3xl mx-auto text-slate-600">I am honored to have received the following awards and certifications, recognizing my dedication to academic excellence and continuous professional development.</p>
+                <div id="recognition-awards" class="subsection">
+                    <h3 class="text-3xl font-bold mb-12 text-center">Awards</h3>
+                     <div class="grid md:grid-cols-2 gap-10">
+                        <div class="animated-item bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-slate-100/80 text-center">
+                            <img src="https://placehold.co/500x350/e0f2fe/083344?text=Huawei+Award" alt="Seeds for the Future Award" class="w-full h-auto rounded-lg object-contain mb-6">
+                            <h4 class="font-bold text-xl">Seeds for the Future, Top 4 from Nepal</h4>
+                            <p class="text-brand-primary font-medium text-sm">Huawei Nepal | Aug-Sep 2023</p>
+                        </div>
+                         <div class="animated-item bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-slate-100/80 text-center">
+                            <img src="https://placehold.co/500x350/e0f2fe/083344?text=Scholarship" alt="Army Public School Scholarship" class="w-full h-auto rounded-lg object-contain mb-6">
+                            <h4 class="font-bold text-xl">Army Public School Scholarship, Top 9 from Nepal</h4>
+                            <p class="text-brand-primary font-medium text-sm">Indian Embassy | May 2012 - May 2019</p>
+                        </div>
+                     </div>
+                </div>
+                <div id="recognition-certifications" class="subsection hidden mt-20">
+                    <h3 class="text-3xl font-bold mb-12 text-center">Certifications</h3>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="animated-item p-8 clay-card text-center">
+                            <i data-feather="cpu" class="h-10 w-10 mx-auto text-brand-primary mb-4"></i>
+                           <h4 class="font-semibold text-lg">MathWorks Computer Vision Engineer</h4>
+                           <p class="text-sm text-slate-500 mt-2">Coursera | Oct 2023</p>
+                        </div>
+                        <div class="animated-item p-8 clay-card text-center">
+                           <i data-feather="box" class="h-10 w-10 mx-auto text-brand-primary mb-4"></i>
+                           <h4 class="font-semibold text-lg">SOLIDWORKS CAD Design Associate</h4>
+                           <p class="text-sm text-slate-500 mt-2">SolidWorks | Sep 2023</p>
+                        </div>
+                         <div class="animated-item p-8 clay-card text-center">
+                           <i data-feather="bar-chart-2" class="h-10 w-10 mx-auto text-brand-primary mb-4"></i>
+                           <h4 class="font-semibold text-lg">IBM Machine Learning Professional</h4>
+                           <p class="text-sm text-slate-500 mt-2">Coursera | Oct 2023</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Blogs Section -->
+            <section id="blogs" class="content-section">
+                <h2 class="text-4xl font-bold text-center">From My Blog</h2>
+                <p class="mb-16 text-xl leading-relaxed text-center max-w-3xl mx-auto text-slate-600">I enjoy sharing my thoughts on technology, engineering, and personal growth. Here are some of my recent articles.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div class="clay-card overflow-hidden group">
+                        <img src="https://placehold.co/400x250/c4b5fd/1e1b4b?text=Blog" alt="Blog Post 1" class="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105">
+                        <div class="p-8">
+                            <p class="text-sm text-slate-500 mb-2">July 15, 2024</p>
+                            <h3 class="text-xl font-bold mb-3">The Future of Autonomous Vehicles</h3>
+                            <a href="#" class="font-semibold text-sm text-brand-primary hover:text-brand-secondary flex items-center gap-2">Read More <i data-feather="arrow-right" class="h-4 w-4"></i></a>
+                        </div>
+                    </div>
+                     <div class="clay-card overflow-hidden group">
+                        <img src="https://placehold.co/400x250/c4b5fd/1e1b4b?text=Blog" alt="Blog Post 2" class="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105">
+                        <div class="p-8">
+                             <p class="text-sm text-slate-500 mb-2">June 28, 2024</p>
+                            <h3 class="text-xl font-bold mb-3">Getting Started with MATLAB</h3>
+                            <a href="#" class="font-semibold text-sm text-brand-primary hover:text-brand-secondary flex items-center gap-2">Read More <i data-feather="arrow-right" class="h-4 w-4"></i></a>
+                        </div>
+                    </div>
+                     <div class="clay-card overflow-hidden group">
+                        <img src="https://placehold.co/400x250/c4b5fd/1e1b4b?text=Blog" alt="Blog Post 3" class="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105">
+                        <div class="p-8">
+                             <p class="text-sm text-slate-500 mb-2">May 10, 2024</p>
+                            <h3 class="text-xl font-bold mb-3">Project Management for Engineers</h3>
+                            <a href="#" class="font-semibold text-sm text-brand-primary hover:text-brand-secondary flex items-center gap-2">Read More <i data-feather="arrow-right" class="h-4 w-4"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="content-section">
+                 <h2 class="text-4xl font-bold text-center">Get In Touch</h2>
+                 <p class="text-center text-xl text-slate-600 mb-12 max-w-2xl mx-auto">Have a question, a project proposal, or just want to connect? I'd love to hear from you.</p>
+                 <form id="contact-form" class="space-y-6 bg-white/70 backdrop-blur-lg p-10 rounded-2xl shadow-2xl max-w-3xl mx-auto border border-slate-100/80">
+                     <div class="flex flex-col md:flex-row gap-8">
+                         <div class="flex-1">
+                             <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Name</label>
+                             <input type="text" id="name" name="name" required class="mt-1 block w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary">
+                         </div>
+                         <div class="flex-1">
+                               <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                             <input type="email" id="email" name="email" required class="mt-1 block w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary">
+                         </div>
+                     </div>
+                     <div>
+                         <label for="subject" class="block text-sm font-medium text-slate-700 mb-1">Subject</label>
+                         <input type="text" id="subject" name="subject" required class="mt-1 block w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary">
+                     </div>
+                      <div>
+                         <label for="message" class="block text-sm font-medium text-slate-700 mb-1">Message</label>
+                         <textarea id="message" name="message" rows="5" required class="mt-1 block w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"></textarea>
+                     </div>
+                     <div class="text-center pt-4">
+                         <button type="submit" class="clay-button px-10 py-4 font-semibold text-brand-primary">
+                             Send Message
+                         </button>
+                     </div>
+                 </form>
+                 <div id="form-status" class="mt-8 text-center"></div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900/90 backdrop-blur-lg text-slate-300 border-t border-slate-100/10">
+        <div class="container mx-auto px-6 py-16">
+            <div class="grid md:grid-cols-3 gap-10 text-center md:text-left">
+                <div>
+                    <h3 class="font-bold text-2xl text-white mb-4">Jyotish Kumar Jha</h3>
+                    <p class="text-sm text-slate-400">Mechanical Engineer & Automation Enthusiast</p>
+                </div>
+                 <div>
+                    <h3 class="font-bold text-lg text-white mb-4">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#home" data-section="home" class="hover:text-brand-primary transition-colors text-sm">Home</a></li>
+                        <li><a href="#about" data-section="about" class="hover:text-brand-primary transition-colors text-sm">About</a></li>
+                        <li><a href="#projects" data-section="projects" class="hover:text-brand-primary transition-colors text-sm">Projects</a></li>
+                        <li><a href="#contact" data-section="contact" class="hover:text-brand-primary transition-colors text-sm">Contact</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h3 class="font-bold text-lg text-white mb-4">Connect</h3>
+                     <div class="flex justify-center md:justify-start space-x-5">
+                         <a href="https://www.linkedin.com/in/jyotish-kr-jha-9a3a1919a/" target="_blank" class="hover:text-brand-primary transition-colors"><i data-feather="linkedin"></i></a>
+                     </div>
+                     <p class="text-sm mt-4 text-slate-400">jyotishkumarjha48@gmail.com</p>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 mt-12 pt-8 text-center text-sm text-slate-500">
+                <p>&copy; 2024 Jyotish Kumar Jha. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            feather.replace();
+            
+            const navLinks = document.querySelectorAll('nav a, footer a[data-section], nav button');
+            const mainNavLinks = document.querySelectorAll('header .hidden.md\\:flex > a.nav-link, header .hidden.md\\:flex > div > button.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    if(this.dataset.section) {
+                        if(!this.closest('.has-submenu')){
+                           e.preventDefault();
+                        }
+                        const sectionId = this.dataset.section;
+                        const subsectionId = this.dataset.subsection;
+                        showSection(sectionId, subsectionId);
+                        closeMobileMenu();
+                        
+                        if(sectionId !== 'home') {
+                            const header = document.getElementById('header');
+                            window.scrollTo({ top: header.offsetHeight, behavior: 'smooth' });
+                        } else {
+                             window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+
+            function showSection(sectionId, subsectionId) {
+                contentSections.forEach(section => section.classList.toggle('active', section.id === sectionId));
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    handleSubsections(targetSection, sectionId, subsectionId);
+                }
+                updateActiveNav(sectionId);
+            }
+
+            function handleSubsections(parentSection, sectionId, subsectionId) {
+                const subsections = parentSection.querySelectorAll('.subsection');
+                if (subsections.length > 0) {
+                    subsections.forEach(sub => sub.classList.add('hidden'));
+                    let targetSub = subsectionId ? document.getElementById(`${sectionId}-${subsectionId}`) : subsections[0];
+                    if (targetSub) {
+                        targetSub.classList.remove('hidden');
+                    }
+                }
+            }
+
+            function updateActiveNav(sectionId) {
+                mainNavLinks.forEach(link => {
+                    link.classList.toggle('active', link.dataset.section === sectionId);
+                });
+            }
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const desktopMenu = document.querySelector('header .hidden.md\\:flex');
+            
+            mobileMenu.innerHTML = desktopMenu.innerHTML;
+            mobileMenu.querySelectorAll('.has-submenu').forEach(submenuContainer => {
+                const button = submenuContainer.querySelector('button');
+                const submenu = submenuContainer.querySelector('.submenu');
+                submenu.classList.remove('absolute', 'bg-white/70', 'backdrop-blur-lg', 'rounded-xl', 'shadow-2xl', 'py-2', 'border', 'border-slate-100/80');
+                submenu.classList.add('pl-4', 'mt-2', 'space-y-2');
+                submenu.style.display = 'none';
+                button.addEventListener('click', (e) => {
+                   e.stopPropagation();
+                   const isVisible = submenu.style.display === 'block';
+                   mobileMenu.querySelectorAll('.submenu').forEach(s => s.style.display = 'none');
+                   submenu.style.display = isVisible ? 'none' : 'block';
+                });
+            });
+
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            function closeMobileMenu() {
+                if (!mobileMenu.classList.contains('hidden')) {
+                     mobileMenu.classList.add('hidden');
+                }
+            }
+            
+            const slideshow = document.querySelector('.slideshow');
+            if (slideshow && slideshow.children.length > 1) {
+                let slideIndex = 0;
+                setInterval(() => {
+                    slideIndex = (slideIndex + 1) % slideshow.children.length;
+                    slideshow.style.transform = `translateX(-${(slideIndex / slideshow.children.length) * 100}%)`;
+                }, 5000);
+            }
+
+            const contactForm = document.getElementById('contact-form');
+            const formStatus = document.getElementById('form-status');
+            contactForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                formStatus.textContent = 'Sending...';
+                formStatus.className = 'text-brand-secondary';
+                setTimeout(() => {
+                    if (Math.random() > 0.1) { 
+                        formStatus.textContent = 'Thank you! Your message has been sent successfully.';
+                        formStatus.className = 'text-green-600 p-4 bg-green-100 rounded-lg';
+                        contactForm.reset();
+                    } else {
+                        formStatus.textContent = 'Oops! Something went wrong. Please try again later.';
+                        formStatus.className = 'text-red-600 p-4 bg-red-100 rounded-lg';
+                    }
+                }, 1500);
+            });
+
+            showSection('home');
+        });
+    </script>
+</body>
+</html>
